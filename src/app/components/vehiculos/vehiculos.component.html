@@ -1,0 +1,77 @@
+<div class="vehiculos-container">
+  <h2>Gestión de Vehículos</h2>
+
+  <form #vehiculoForm="ngForm" (ngSubmit)="validarYAgregarVehiculo()" novalidate>
+
+    <input type="text" placeholder="Placa" [(ngModel)]="nuevoVehiculo.placa" name="placa" required #placa="ngModel">
+  
+    <input type="text" placeholder="Tipo de Vehículo" [(ngModel)]="nuevoVehiculo.tipoVehiculo" name="tipoVehiculo" required #tipoVehiculo="ngModel">
+  
+    <label for="hibrido">¿Vehiculo Eléctrico?</label>
+    <select id="hibrido" [(ngModel)]="nuevoVehiculo.esHibridoOElectrico" name="esHibridoOElectrico" required #hibrido="ngModel">
+      <option [value]="1">Híbrido</option>
+      <option [value]="0">Eléctrico</option>
+    </select>
+  
+    <label for="horaIngreso">Hora de Ingreso</label>
+    <input id="horaIngreso" type="datetime-local" [(ngModel)]="nuevoVehiculo.horaIngreso" name="horaIngreso" required #horaIngreso="ngModel">
+  
+    <label for="horaSalida">Hora de Salida (opcional)</label>
+    <input id="horaSalida" type="datetime-local" [(ngModel)]="nuevoVehiculo.horaSalida" name="horaSalida">
+  
+    <input type="number" placeholder="Plaza Asignada" [(ngModel)]="nuevoVehiculo.plazaAsignada" name="plazaAsignada" required #plaza="ngModel">
+  
+    <button type="submit">Agregar</button>
+  
+  </form>
+  
+  <table *ngIf="vehiculos.length > 0">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Tipo</th>
+        <th>¿Híbrido/Eléctrico?</th>
+        <th>Hora Ingreso</th>
+        <th>Hora Salida</th>
+        <th>Plaza</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vehiculo of vehiculos">
+        <ng-container *ngIf="vehiculoEditando?.Id === vehiculo.Id; else modoLectura">
+          <td><input [(ngModel)]="vehiculoEditando.Placa" /></td>
+          <td><input [(ngModel)]="vehiculoEditando.TipoVehiculo" /></td>
+          <td>
+            <select [(ngModel)]="vehiculoEditando.EsHibridoOElectrico">
+              <option [value]="1">Sí</option>
+              <option [value]="0">No</option>
+            </select>
+          </td>
+          <td><input type="datetime-local" [(ngModel)]="vehiculoEditando.HoraIngreso" /></td>
+          <td><input type="datetime-local" [(ngModel)]="vehiculoEditando.HoraSalida" /></td>
+          <td><input type="number" [(ngModel)]="vehiculoEditando.PlazaAsignada" /></td>
+          <td>
+            <button (click)="guardarCambios()">Guardar</button>
+            <button (click)="cancelarEdicion()">Cancelar</button>
+          </td>
+        </ng-container>
+  
+        <ng-template #modoLectura>
+          <td>{{ vehiculo.Placa }}</td>
+          <td>{{ vehiculo.TipoVehiculo }}</td>
+          <td>{{ vehiculo.EsHibridoOElectrico === 1 ? 'Sí' : 'No' }}</td>
+          <td>{{ vehiculo.HoraIngreso | date: 'short' }}</td>
+          <td>{{ vehiculo.HoraSalida ? (vehiculo.HoraSalida | date: 'short') : '—' }}</td>
+          <td>{{ vehiculo.PlazaAsignada }}</td>
+          <td>
+            <button (click)="editarVehiculo(vehiculo)">Editar</button>
+            <button (click)="eliminarVehiculo(vehiculo.Id)">Eliminar</button>
+          </td>
+        </ng-template>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+</div>
